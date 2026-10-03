@@ -1,5 +1,13 @@
 package at.fhtw.mrp.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+
 public class Rating {
     private int id;
     private User user;
@@ -7,12 +15,4 @@ public class Rating {
     private int stars;
     private String comments;
 
-    public Rating(int id, User user, Media media,
-                  int stars, String comments) {
-        this.id = id;
-        this.user = user;
-        this.media = media;
-        this.stars =stars;
-        this.comments = comments;
-    }
 }
