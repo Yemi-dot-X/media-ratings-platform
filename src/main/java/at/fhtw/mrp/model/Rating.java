@@ -10,9 +10,13 @@ import lombok.Setter;
 
 public class Rating {
     private int id;
-    private User user;
-    private Media media;
+    private int userId;
+    private int mediaId;
+
+    @Setter
     private int stars;
+
+    @Setter
     private String comments;
 
 }

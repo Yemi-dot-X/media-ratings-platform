@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 
 public abstract class Media {
+        private int creatorId;
         private final int id;
         private final String title;
         private final String description;
@@ -19,5 +20,7 @@ public abstract class Media {
     private List<Genre> genres;
 
 
+    public void setTitle(String newTitle) {
     }
+}
 
