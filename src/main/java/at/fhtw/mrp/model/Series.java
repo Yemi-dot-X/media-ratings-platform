@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Series extends Media {
     public Series(
+        int creatorId,
         int id,
         String title,
         String description,
@@ -18,6 +19,6 @@ public class Series extends Media {
         List<Genre> genres
 
         ) {
-    super(id, title, description, releaseYear, ageRestriction, genres);
+    super(creatorId, id, title, description, releaseYear, ageRestriction, genres);
     }
 }

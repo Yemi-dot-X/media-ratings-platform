@@ -12,6 +12,7 @@ public class Movie extends Media{
     private int duration;
 
     public Movie(
+            int creatorId,
             int id,
             String title,
             String description,
@@ -21,6 +22,7 @@ public class Movie extends Media{
             int duration
     ) {
         super(
+                creatorId,
                 id,
                 title,
                 description,

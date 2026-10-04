@@ -12,11 +12,9 @@ public class Rating {
     private int id;
     private int userId;
     private int mediaId;
-
-    @Setter
+    private int score;
+    private String comment;
     private int stars;
 
-    @Setter
-    private String comments;
 
 }
