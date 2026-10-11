@@ -14,7 +14,6 @@ public class Rating {
     private int mediaId;
     private int score;
     private String comment;
-    private int stars;
 
 
 }

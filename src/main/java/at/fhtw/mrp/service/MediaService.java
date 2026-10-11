@@ -1,3 +1,4 @@
+
 package at.fhtw.mrp.service;
 
 import at.fhtw.mrp.model.Genre;
@@ -6,136 +7,107 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class MediaService {
 
     private final RatingService ratingService;
 
-    private final List<Media> mediaList = new ArrayList<>();
-
+    private final Map<Integer, Media> mediaMap = new HashMap<>();
 
     // CREATE
     public void createMedia(Media media) {
 
         if (media == null) {
-            throw new IllegalArgumentException("Media must not be null");
+            throw new IllegalArgumentException(
+                    "Media must not be null"
+            );
         }
 
-        mediaList.add(media);
-    }
+        if (media.getTitle() == null ||
+                media.getTitle().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Title must not be empty"
+            );
+        }
 
+        if (mediaMap.containsKey(media.getId())) {
+            throw new IllegalArgumentException(
+                    "Media ID already exists"
+            );
+        }
+
+        mediaMap.put(media.getId(), media);
+    }
 
     // READ ALL
     public List<Media> viewMedia() {
-        return mediaList;
+        return new ArrayList<>(mediaMap.values());
     }
-
 
     // FIND BY ID
     public Media findById(int id) {
-
-        for (Media media : mediaList) {
-
-            if (media.getId() == id) {
-                return media;
-            }
-        }
-
-        return null;
+        return mediaMap.get(id);
     }
-
 
     // FIND BY TITLE
     public List<Media> findByTitle(String title) {
-
-        List<Media> result = new ArrayList<>();
-
-        for (Media media : mediaList) {
-
-            if (media.getTitle().equalsIgnoreCase(title)) {
-                result.add(media);
-            }
-        }
-
-        return result;
+        return mediaMap.values().stream()
+                .filter(media ->
+                        media.getTitle().equalsIgnoreCase(title))
+                .toList();
     }
-
 
     // FIND BY GENRE
     public List<Media> findByGenre(Genre genre) {
-
-        List<Media> result = new ArrayList<>();
-
-        for (Media media : mediaList) {
-
-            if (media.getGenres().contains(genre)) {
-                result.add(media);
-            }
-        }
-
-        return result;
+        return mediaMap.values().stream()
+                .filter(media ->
+                        media.getGenres() != null &&
+                                media.getGenres().contains(genre))
+                .toList();
     }
-
 
     // FILTER BY RELEASE YEAR
     public List<Media> filterByReleaseYear(int year) {
-
-        List<Media> result = new ArrayList<>();
-
-        for (Media media : mediaList) {
-
-            if (media.getReleaseYear() == year) {
-                result.add(media);
-            }
-        }
-
-        return result;
+        return mediaMap.values().stream()
+                .filter(media ->
+                        media.getReleaseYear() == year)
+                .toList();
     }
-
 
     // FILTER BY AGE RESTRICTION
     public List<Media> filterByAgeRestriction(int age) {
-
-        List<Media> result = new ArrayList<>();
-
-        for (Media media : mediaList) {
-
-            if (media.getAgeRestriction() <= age) {
-                result.add(media);
-            }
-        }
-
-        return result;
+        return mediaMap.values().stream()
+                .filter(media ->
+                        media.getAgeRestriction() <= age)
+                .toList();
     }
-
 
     // SORT BY TITLE
     public List<Media> sortByTitle() {
-
-        List<Media> result = new ArrayList<>(mediaList);
-
-        result.sort(
-                Comparator.comparing(Media::getTitle)
-        );
-
-        return result;
+        return mediaMap.values().stream()
+                .sorted(Comparator.comparing(Media::getTitle))
+                .toList();
     }
-
 
     // SORT BY RELEASE YEAR
     public List<Media> sortByReleaseYear() {
-
-        List<Media> result = new ArrayList<>(mediaList);
-
-        result.sort(
-                Comparator.comparingInt(Media::getReleaseYear)
-        );
-
-        return result;
+        return mediaMap.values().stream()
+                .sorted(Comparator.comparingInt(Media::getReleaseYear))
+                .toList();
     }
 
+    // COUNT BY GENRE
+    public long countMediaByGenre(Genre genre) {
+        return mediaMap.values().stream()
+                .filter(media ->
+                        media.getGenres() != null &&
+                                media.getGenres().contains(genre))
+                .count();
+    }
 
     // DELETE
     public void deleteMedia(int mediaId, int userId) {
@@ -143,7 +115,9 @@ public class MediaService {
         Media media = findById(mediaId);
 
         if (media == null) {
-            throw new IllegalArgumentException("Media not found");
+            throw new IllegalArgumentException(
+                    "Media not found"
+            );
         }
 
         if (media.getCreatorId() != userId) {
@@ -152,9 +126,8 @@ public class MediaService {
             );
         }
 
-        mediaList.remove(media);
+        mediaMap.remove(mediaId);
     }
-
 
     // UPDATE
     public void updateMedia(
@@ -166,12 +139,20 @@ public class MediaService {
         Media media = findById(mediaId);
 
         if (media == null) {
-            throw new IllegalArgumentException("Media not found");
+            throw new IllegalArgumentException(
+                    "Media not found"
+            );
         }
 
         if (media.getCreatorId() != userId) {
             throw new IllegalArgumentException(
                     "User is not the creator of this media"
+            );
+        }
+
+        if (newTitle == null || newTitle.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Title must not be empty"
             );
         }
 

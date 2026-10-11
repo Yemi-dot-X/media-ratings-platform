@@ -15,7 +15,22 @@ public class RatingService {
     public void createRating(Rating rating) {
 
         if (rating == null) {
-            throw new IllegalArgumentException("Rating must not be null");
+            throw new IllegalArgumentException(
+                    "Rating must not be null"
+            );
+        }
+
+        if (rating.getScore() < 1 || rating.getScore() > 5) {
+            throw new IllegalArgumentException(
+                    "Score must be between 1 and 5"
+            );
+        }
+
+        if (rating.getComment() == null ||
+                rating.getComment().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Comment must not be empty"
+            );
         }
 
         ratings.add(rating);
@@ -65,6 +80,18 @@ public class RatingService {
         if (rating.getUserId() != userId) {
             throw new IllegalArgumentException(
                     "User is not the creator of this rating"
+            );
+        }
+
+        if (newScore < 1 || newScore > 5) {
+            throw new IllegalArgumentException(
+                    "Score must be between 1 and 5"
+            );
+        }
+
+        if (newComment == null || newComment.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Comment must not be empty"
             );
         }
 

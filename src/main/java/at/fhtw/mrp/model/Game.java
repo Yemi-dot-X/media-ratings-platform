@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class Game extends Media {
     public Game(
+            int creatorId,
             int id,
             String title,
             String description,
@@ -16,6 +17,14 @@ public class Game extends Media {
             int ageRestriction,
             List<Genre> genres
     ) {
-        super(id, title, description, releaseYear, ageRestriction, genres);
+        super(
+                creatorId,
+                id,
+                title,
+                description,
+                releaseYear,
+                ageRestriction,
+                genres
+        );
     }
 }

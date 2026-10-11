@@ -4,6 +4,9 @@ import at.fhtw.mrp.model.Rating;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +22,11 @@ public class RatingFileHandler {
             for (Rating rating : ratings) {
 
                 String line =
-                        rating.getId() + ";" +
-                                rating.getUserId() + ";" +
-                                rating.getMediaId() + ";" +
-                                rating.getScore();
+                    rating.getId() + ";" +
+                    rating.getUserId() + ";" +
+                    rating.getMediaId() + ";" +
+                    rating.getScore() + ";" +
+                    rating.getComment();
 
                 writer.write(line + "\n");
             }
@@ -44,30 +48,42 @@ public class RatingFileHandler {
             while ((line = reader.readLine()) != null) {
 
                 String[] parts = line.split(";");
+                if (parts.length != 5) {
+                    continue;
+                }
 
-                int ratingId = Integer.parseInt(parts[0]);
-                int userId = Integer.parseInt(parts[1]);
-                int mediaId = Integer.parseInt(parts[2]);
-                int score = Integer.parseInt(parts[3]);
-                String comment = parts[4];
-                int stars = Integer.parseInt(parts[5]);
+                try {
+                    int ratingId = Integer.parseInt(parts[0]);
+                    int userId = Integer.parseInt(parts[1]);
+                    int mediaId = Integer.parseInt(parts[2]);
+                    int score = Integer.parseInt(parts[3]);
+                    String comment = parts[4];
 
-                Rating rating = new Rating(
-                        ratingId,
-                        userId,
-                        mediaId,
-                        score,
-                        comment,
-                        stars
-                );
 
-                ratings.add(rating);
+                    Rating rating = new Rating(
+                            ratingId,
+                            userId,
+                            mediaId,
+                            score,
+                            comment
+                    );
+
+                    ratings.add(rating);
+                } catch (NumberFormatException e) {
+                    System.err.println(
+                            "Ungueltige Bewertung: " + line
+                    );
+                }
+
             }
-
         } catch (IOException e) {
             System.out.println("Fehler beim Laden: " + e.getMessage());
         }
 
         return ratings;
+    }
+
+    public boolean fileExists(String filename) {
+        return Files.exists(Path.of(filename));
     }
 }
