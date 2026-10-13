@@ -1,0 +1,252 @@
+[
+  {
+    "id": 1,
+    "creatorId": 1,
+    "title": "Interstellar",
+    "description": "A team travels through space searching for a new home for humanity.",
+    "releaseYear": 2014,
+    "ageRestriction": 12,
+    "genres": ["SCIENCE_FICTION"],
+    "duration": 152
+  },
+  {
+    "id": 2,
+    "creatorId": 1,
+    "title": "The Dark Knight",
+    "description": "Batman faces the Joker in Gotham City.",
+    "releaseYear": 2008,
+    "ageRestriction": 16,
+    "genres": ["ACTION"],
+    "duration": 152
+  },
+  {
+    "id": 3,
+    "creatorId": 1,
+    "title": "Inception",
+    "description": "A thief enters dreams to steal and plant ideas.",
+    "releaseYear": 2010,
+    "ageRestriction": 12,
+    "genres": ["SCIENCE_FICTION"],
+    "duration": 152
+  },
+  {
+    "id": 4,
+    "creatorId": 1,
+    "title": "Titanic",
+    "description": "Two passengers fall in love aboard the Titanic.",
+    "releaseYear": 1997,
+    "ageRestriction": 12,
+    "genres": ["ROMANCE"],
+    "duration": 152
+  },
+  {
+    "id": 5,
+    "creatorId": 1,
+    "title": "Gladiator",
+    "description": "A Roman general becomes a gladiator and seeks revenge.",
+    "releaseYear": 2000,
+    "ageRestriction": 16,
+    "genres": ["ACTION"],
+    "duration": 152
+  },
+  {
+    "id": 6,
+    "creatorId": 1,
+    "title": "The Matrix",
+    "description": "A programmer learns the truth about his reality.",
+    "releaseYear": 1999,
+    "ageRestriction": 16,
+    "genres": ["SCIENCE_FICTION"],
+    "duration": 152
+  },
+  {
+    "id": 7,
+    "creatorId": 1,
+    "title": "Finding Nemo",
+    "description": "A father crosses the ocean searching for his son.",
+    "releaseYear": 2003,
+    "ageRestriction": 6,
+    "genres": ["ANIMATION"],
+    "duration": 152
+  },
+  {
+    "id": 8,
+    "creatorId": 1,
+    "title": "The Lion King",
+    "description": "A young lion learns to accept his role as king.",
+    "releaseYear": 1994,
+    "ageRestriction": 6,
+    "genres": ["ANIMATION"],
+    "duration": 152
+  },
+  {
+    "id": 9,
+    "creatorId": 1,
+    "title": "Shrek",
+    "description": "An ogre sets out to rescue a princess.",
+    "releaseYear": 2001,
+    "ageRestriction": 6,
+    "genres": ["COMEDY"],
+    "duration": 152
+  },
+  {
+    "id": 10,
+    "creatorId": 1,
+    "title": "Jurassic Park",
+    "description": "Dinosaurs escape inside a revolutionary theme park.",
+    "releaseYear": 1993,
+    "ageRestriction": 12,
+    "genres": ["ACTION"],
+    "duration": 152
+  },
+  {
+    "id": 11,
+    "creatorId": 1,
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "description": "A group begins a journey to destroy a dangerous ring.",
+    "releaseYear": 2001,
+    "ageRestriction": 12,
+    "genres": ["FANTASY"],
+    "duration": 152
+  },
+  {
+    "id": 12,
+    "creatorId": 1,
+    "title": "Harry Potter and the Philosopher's Stone",
+    "description": "A young wizard begins his education at Hogwarts.",
+    "releaseYear": 2001,
+    "ageRestriction": 6,
+    "genres": ["FANTASY"],
+    "duration": 152
+  },
+  {
+    "id": 13,
+    "creatorId": 1,
+    "title": "The Conjuring",
+    "description": "Paranormal investigators help a family in a haunted house.",
+    "releaseYear": 2013,
+    "ageRestriction": 16,
+    "genres": ["HORROR"],
+    "duration": 152
+  },
+  {
+    "id": 14,
+    "creatorId": 1,
+    "title": "Get Out",
+    "description": "A young man discovers disturbing secrets during a family visit.",
+    "releaseYear": 2017,
+    "ageRestriction": 16,
+    "genres": ["HORROR"],
+    "duration": 152
+  },
+  {
+    "id": 15,
+    "creatorId": 1,
+    "title": "The Hangover",
+    "description": "Friends search Las Vegas for their missing friend.",
+    "releaseYear": 2009,
+    "ageRestriction": 16,
+    "genres": ["COMEDY"],
+    "duration": 152
+  },
+  {
+    "id": 16,
+    "creatorId": 1,
+    "title": "Forrest Gump",
+    "description": "A man experiences several major moments in American history.",
+    "releaseYear": 1994,
+    "ageRestriction": 12,
+    "genres": ["DRAMA"],
+    "duration": 152
+  },
+  {
+    "id": 17,
+    "creatorId": 1,
+    "title": "The Shawshank Redemption",
+    "description": "Two prisoners form a lasting friendship.",
+    "releaseYear": 1994,
+    "ageRestriction": 16,
+    "genres": ["DRAMA"],
+    "duration": 152
+  },
+  {
+    "id": 18,
+    "creatorId": 1,
+    "title": "Mad Max: Fury Road",
+    "description": "Survivors escape across a dangerous wasteland.",
+    "releaseYear": 2015,
+    "ageRestriction": 16,
+    "genres": ["ACTION"],
+    "duration": 152
+  },
+  {
+    "id": 19,
+    "creatorId": 1,
+    "title": "Toy Story",
+    "description": "Toys come to life when humans leave the room.",
+    "releaseYear": 1995,
+    "ageRestriction": 0,
+    "genres": ["ANIMATION"],
+    "duration": 152
+  },
+  {
+    "id": 20,
+    "creatorId": 1,
+    "title": "Avatar",
+    "description": "A former soldier travels to the alien world Pandora.",
+    "releaseYear": 2009,
+    "ageRestriction": 12,
+    "genres": ["SCIENCE_FICTION"],
+    "duration": 152
+  },
+  {
+    "id": 21,
+    "creatorId": 1,
+    "title": "Black Panther",
+    "description": "A king protects Wakanda from a dangerous challenger.",
+    "releaseYear": 2018,
+    "ageRestriction": 12,
+    "genres": ["ACTION"],
+    "duration": 152
+  },
+  {
+    "id": 22,
+    "creatorId": 1,
+    "title": "La La Land",
+    "description": "A musician and an actress pursue their dreams in Los Angeles.",
+    "releaseYear": 2016,
+    "ageRestriction": 6,
+    "genres": ["ROMANCE"],
+    "duration": 152
+  },
+  {
+    "id": 23,
+    "creatorId": 1,
+    "title": "Dune",
+    "description": "A young noble travels to a dangerous desert planet.",
+    "releaseYear": 2021,
+    "ageRestriction": 12,
+    "genres": ["SCIENCE_FICTION"],
+    "duration": 152
+  },
+  {
+    "id": 24,
+    "creatorId": 1,
+    "title": "Pirates of the Caribbean: The Curse of the Black Pearl",
+    "description": "A pirate joins a mission involving a mysterious curse.",
+    "releaseYear": 2003,
+    "ageRestriction": 12,
+    "genres": ["ACTION"],
+    "duration": 152
+  },
+  {
+    "id": 25,
+    "creatorId": 1,
+    "title": "The Devil Wears Prada",
+    "description": "A young journalist starts working for a demanding fashion editor.",
+    "releaseYear": 2006,
+    "ageRestriction": 6,
+    "genres": ["COMEDY"],
+    "duration": 152
+  }
+]

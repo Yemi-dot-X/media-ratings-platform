@@ -2,12 +2,13 @@ package at.fhtw.mrp.model;
 
 public enum Genre {
     ACTION,
-    COMEDY,
     DRAMA,
-    HORROR,
     THRILLER,
+    COMEDY,
+    HORROR,
+    DOCUMENTARY,
+    ROMANCE,
     FANTASY,
     SCIENCE_FICTION,
-    ROMANCE,
-    DOCUMENTARY
+    ANIMATION
 }

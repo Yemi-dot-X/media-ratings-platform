@@ -76,7 +76,7 @@
     "description": "A young lion learns to accept his role as king.",
     "releaseYear": 1994,
     "ageRestriction": 6,
-    "genre": "ANIMATION",
+    "genres": ["ANIMATION"],
     "duration": 152
   },
   {
@@ -86,7 +86,7 @@
     "description": "An ogre sets out to rescue a princess.",
     "releaseYear": 2001,
     "ageRestriction": 6,
-    "genre": "COMEDY",
+    "genres": ["COMEDY"],
     "duration": 152
   },
   {
@@ -96,7 +96,7 @@
     "description": "Dinosaurs escape inside a revolutionary theme park.",
     "releaseYear": 1993,
     "ageRestriction": 12,
-    "genre": "ADVENTURE",
+    "genres": ["ACTION"],
     "duration": 152
   },
   {
@@ -106,7 +106,7 @@
     "description": "A group begins a journey to destroy a dangerous ring.",
     "releaseYear": 2001,
     "ageRestriction": 12,
-    "genre": "FANTASY",
+    "genres": ["FANTASY"],
     "duration": 152
   },
   {
@@ -116,7 +116,7 @@
     "description": "A young wizard begins his education at Hogwarts.",
     "releaseYear": 2001,
     "ageRestriction": 6,
-    "genre": "FANTASY",
+    "genres": ["FANTASY"],
     "duration": 152
   },
   {
@@ -126,7 +126,7 @@
     "description": "Paranormal investigators help a family in a haunted house.",
     "releaseYear": 2013,
     "ageRestriction": 16,
-    "genre": "HORROR",
+    "genres": ["HORROR"],
     "duration": 152
   },
   {
@@ -136,7 +136,7 @@
     "description": "A young man discovers disturbing secrets during a family visit.",
     "releaseYear": 2017,
     "ageRestriction": 16,
-    "genre": "HORROR",
+    "genres": ["HORROR"],
     "duration": 152
   },
   {
@@ -146,7 +146,7 @@
     "description": "Friends search Las Vegas for their missing friend.",
     "releaseYear": 2009,
     "ageRestriction": 16,
-    "genre": "COMEDY",
+    "genres": ["COMEDY"],
     "duration": 152
   },
   {
@@ -206,7 +206,7 @@
     "description": "A king protects Wakanda from a dangerous challenger.",
     "releaseYear": 2018,
     "ageRestriction": 12,
-    "genre": "ACTION",
+    "genres": ["ACTION"],
     "duration": 152
   },
   {
@@ -216,7 +216,7 @@
     "description": "A musician and an actress pursue their dreams in Los Angeles.",
     "releaseYear": 2016,
     "ageRestriction": 6,
-    "genre": "ROMANCE",
+    "genres": ["ROMANCE"],
     "duration": 152
   },
   {
@@ -226,7 +226,7 @@
     "description": "A young noble travels to a dangerous desert planet.",
     "releaseYear": 2021,
     "ageRestriction": 12,
-    "genre": "SCIENCE_FICTION",
+    "genres": ["SCIENCE_FICTION"],
     "duration": 152
   },
   {
@@ -236,7 +236,7 @@
     "description": "A pirate joins a mission involving a mysterious curse.",
     "releaseYear": 2003,
     "ageRestriction": 12,
-    "genre": "ADVENTURE",
+    "genres": ["ACTION"],
     "duration": 152
   },
   {
@@ -246,7 +246,7 @@
     "description": "A young journalist starts working for a demanding fashion editor.",
     "releaseYear": 2006,
     "ageRestriction": 6,
-    "genre": "COMEDY",
+    "genres": ["COMEDY"],
     "duration": 152
   }
 ]

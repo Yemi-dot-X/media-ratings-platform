@@ -1,3 +1,4 @@
+
 package at.fhtw.mrp.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -9,15 +10,14 @@ import java.util.List;
 
 @Getter
 @Setter
+public class Movie extends Media {
 
-public class Movie extends Media{
     private int duration;
 
     @JsonCreator
     public Movie(
-            @JsonProperty("id") int id,
             @JsonProperty("creatorId") int creatorId,
-
+            @JsonProperty("id") int id,
             @JsonProperty("title") String title,
             @JsonProperty("description") String description,
             @JsonProperty("releaseYear") int releaseYear,
@@ -26,9 +26,8 @@ public class Movie extends Media{
             @JsonProperty("duration") int duration
     ) {
         super(
-
-                id,
                 creatorId,
+                id,
                 title,
                 description,
                 releaseYear,
