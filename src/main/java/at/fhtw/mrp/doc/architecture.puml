@@ -1,0 +1,62 @@
+
+@startuml
+title MRP - Layered Architecture
+
+skinparam componentStyle rectangle
+
+actor "Postman / Client" as Client
+
+package "Java Application" {
+    component "MRPServer" as Server
+
+    package "Handler" {
+        component "MediaHandler" as MH
+        component "UserHandler" as UH
+        component "RatingHandler" as RH
+    }
+
+    package "Service" {
+        component "MediaService" as MS
+        component "UserService" as US
+        component "RatingService" as RS
+    }
+
+    package "Repository" {
+        component "MediaRepository" as MR
+        component "UserRepository" as UR
+        component "RatingRepository" as RR
+    }
+
+    component "Jackson" as JSON
+    component "TokenService" as Token
+}
+
+database "PostgreSQL\n(Docker)" as DB
+
+Client --> Server : HTTP / JSON
+Server --> MH
+Server --> UH
+Server --> RH
+
+MH --> MS
+UH --> US
+RH --> RS
+
+MS --> MR
+US --> UR
+RS --> RR
+
+MR --> DB
+UR --> DB
+RR --> DB
+
+MH ..> JSON
+UH ..> JSON
+RH ..> JSON
+
+MH ..> Token
+UH ..> Token
+RH ..> Token
+
+@enduml
+

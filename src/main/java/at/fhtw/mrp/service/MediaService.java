@@ -1,8 +1,10 @@
 
 package at.fhtw.mrp.service;
 
+import at.fhtw.mrp.dto.UpdateMediaRequest;
 import at.fhtw.mrp.model.Genre;
 import at.fhtw.mrp.model.Media;
+import at.fhtw.mrp.model.Movie;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -129,33 +131,73 @@ public class MediaService {
         mediaMap.remove(mediaId);
     }
 
-    // UPDATE
+    // UPDATE für PUT handle
     public void updateMedia(
             int mediaId,
             int userId,
-            String newTitle
+            UpdateMediaRequest request
     ) {
-
         Media media = findById(mediaId);
 
+        // 1. Existiert das Medium?
         if (media == null) {
-            throw new IllegalArgumentException(
-                    "Media not found"
-            );
+            throw new IllegalArgumentException("Media not found");
         }
 
+        // 2. Ist der Benutzer der Ersteller?
         if (media.getCreatorId() != userId) {
             throw new IllegalArgumentException(
-                    "User is not the creator of this media"
+                    "Only the creator may update this media"
             );
         }
 
-        if (newTitle == null || newTitle.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Title must not be empty"
-            );
+        if (request == null) {
+            throw new IllegalArgumentException("Request is null");
         }
 
-        media.setTitle(newTitle);
+        // 3. Titel aktualisieren
+        if (request.getTitle() != null) {
+            if (request.getTitle().isBlank()) {
+                throw new IllegalArgumentException("Title must not be empty");
+            }
+            media.setTitle(request.getTitle());
+        }
+
+        // 4. Beschreibung aktualisieren
+        if (request.getDescription() != null) {
+            media.setDescription(request.getDescription());
+        }
+
+        // 5. Genres aktualisieren
+        if (request.getGenres() != null) {
+            media.setGenres(request.getGenres());
+        }
+
+        // 6. Erscheinungsjahr aktualisieren
+        if (request.getReleaseYear() != null) {
+            media.setReleaseYear(request.getReleaseYear());
+        }
+
+        // 7. Altersfreigabe aktualisieren
+        if (request.getAgeRestriction() != null) {
+            media.setAgeRestriction(request.getAgeRestriction());
+        }
+
+        // 8. Filmdauer aktualisieren
+        if (request.getDuration() != null) {
+            if (!(media instanceof Movie movie)) {
+                throw new IllegalArgumentException(
+                        "Duration is only supported for movies"
+                );
+            }
+
+            if (request.getDuration() <= 0) {
+                throw new IllegalArgumentException(
+                        "Duration must be positive"
+                );
+            }
+
+            movie.setDuration(request.getDuration());
+        }
     }
 }

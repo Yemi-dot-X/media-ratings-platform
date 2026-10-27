@@ -1,0 +1,71 @@
+
+@startuml
+title MRP - Media Module
+
+abstract class Media {
+    - id : int
+    - creatorId : int
+    - title : String
+    - description : String
+    - releaseYear : int
+    - ageRestriction : int
+    - genres : List<Genre>
+}
+
+class Movie {
+    - duration : int
+}
+
+class Series {
+    - seasons : int
+}
+
+class Game
+
+enum Genre {
+    ACTION
+    COMEDY
+    DRAMA
+    HORROR
+    SCIFI
+}
+
+class MediaHandler {
+    + handle(exchange : HttpExchange) : void
+}
+
+class MediaService {
+    + createMedia(media : Media) : void
+    + getMediaById(id : int) : Media
+    + getAllMedia() : List<Media>
+    + deleteMedia(id : int) : void
+}
+
+interface MediaRepository {
+    + save(media : Media) : void
+    + findById(id : int) : Media
+    + findAll() : List<Media>
+    + deleteById(id : int) : void
+}
+
+class JdbcMediaRepository
+
+Media <|-- Movie
+Media <|-- Series
+Media <|-- Game
+Media --> "0..*" Genre
+
+MediaHandler --> MediaService
+MediaService --> MediaRepository
+MediaRepository <|.. JdbcMediaRepository
+MediaRepository ..> Media
+
+note right of Media
+  Lombok:
+  @Getter
+  @Setter
+  @AllArgsConstructor
+end note
+
+@enduml
+

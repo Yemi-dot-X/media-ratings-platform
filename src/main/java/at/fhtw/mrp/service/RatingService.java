@@ -8,6 +8,8 @@ import java.util.Comparator;
 
 public class RatingService {
 
+    //die Liste wird innerhalb der Klasse initialisiert und deshalb
+    //benötige ich kein Parameter im der MAIN
     private final List<Rating> ratings = new ArrayList<>();
 
 

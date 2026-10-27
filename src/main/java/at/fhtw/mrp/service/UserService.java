@@ -1,10 +1,13 @@
 
 package at.fhtw.mrp.service;
 
+import at.fhtw.mrp.exception.UserAlreadyExistsException;
 import at.fhtw.mrp.model.Genre;
 import at.fhtw.mrp.model.Rating;
 import at.fhtw.mrp.model.User;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
+    private int nextUserId = 1;
+
     private final RatingService ratingService;
     private final MediaService mediaService;
 
@@ -24,13 +29,14 @@ public class UserService {
 
     // REGISTER
     public void register(User user) {
-
+        // User prüfen
         if (user == null) {
             throw new IllegalArgumentException(
                     "User must not be null"
             );
         }
 
+        // Username prüfen
         if (user.getUsername() == null ||
                 user.getUsername().isBlank()) {
             throw new IllegalArgumentException(
@@ -38,18 +44,57 @@ public class UserService {
             );
         }
 
-        if (userMap.containsKey(user.getId())) {
+        // E-Mail prüfen
+        if (user.getEmail() == null ||
+                user.getEmail().isBlank()) {
             throw new IllegalArgumentException(
-                    "User ID already exists"
+                    "Email must not be empty"
             );
         }
 
-        if (usernameExists(user.getUsername())) {
+// Passwort prüfen
+        if (user.getPassword() == null ||
+                user.getPassword().isBlank()) {
             throw new IllegalArgumentException(
+                    "Password must not be empty"
+            );
+        }
+
+        // Username bereits vorhanden?
+        if (usernameExists(user.getUsername())) {
+            throw new UserAlreadyExistsException(
                     "Username already exists"
             );
         }
 
+
+
+        // E-Mail bereits vorhanden?
+        if (emailExists(user.getEmail())) {
+            throw new UserAlreadyExistsException(
+                    "Email already exists"
+            );
+        }
+
+        // ID uebergeben
+        user.setId(nextUserId);
+        nextUserId++;
+
+        // Passwort hashen
+        //eine zufalliger Salt wird verwendet
+        //sodass das unterschiedliche Hashes entstehen bei den selben Passwort
+        String hashedPassword = BCrypt.hashpw(
+                user.getPassword(),
+                BCrypt.gensalt()
+        );
+
+        user.setPassword(hashedPassword);
+
+// ID vergeben
+        user.setId(nextUserId);
+        nextUserId++;
+
+// Benutzer speichern
         userMap.put(user.getId(), user);
     }
 
@@ -73,9 +118,31 @@ public class UserService {
                 .orElse(null);
     }
 
+    public boolean emailExists(String email) {
+
+        for (User existingUser : userMap.values()) {
+
+            if (existingUser.getEmail() != null &&
+                    existingUser.getEmail().equalsIgnoreCase(email)) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     // CHECK USERNAME
     public boolean usernameExists(String username) {
-        return findByUsername(username) != null;
+
+        for (User existingUser : userMap.values()) {
+
+                if(existingUser.getUsername().equals(username)){
+                    return  true;
+                }
+        }
+        //alle nutzer gesucht und niemand gefunden
+        return false;
     }
 
     // TOTAL RATINGS OF USER

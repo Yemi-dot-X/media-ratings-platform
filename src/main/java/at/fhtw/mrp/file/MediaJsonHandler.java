@@ -1,9 +1,7 @@
 
 package at.fhtw.mrp.file;
 
-import at.fhtw.mrp.model.Movie;
-import at.fhtw.mrp.model.Game;
-
+import at.fhtw.mrp.model.Media;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,46 +13,21 @@ public class MediaJsonHandler {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // SAVE MOVIES
-    public void saveMovies(List<Movie> movies, String filename) {
-        try {
-            mapper.writerWithDefaultPrettyPrinter()
-                    .writeValue(new File(filename), movies);
+    // EXPORT
+    public void saveMedia(List<Media> media, String filename)
+            throws IOException {
 
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Fehler beim Speichern der Filme: " + filename, e
-            );
-        }
+        mapper.writerWithDefaultPrettyPrinter()
+                .writeValue(new File(filename), media);
     }
 
-    // LOAD MOVIES
-    public List<Movie> loadMovies(String filename) {
-        try {
-            return mapper.readValue(
-                    new File(filename),
-                    new TypeReference<List<Movie>>() {}
-            );
+    // IMPORT
+    public List<Media> loadMedia(String filename)
+            throws IOException {
 
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Fehler beim Laden der Filme: " + filename, e
-            );
-        }
-    }
-
-    // LOAD GAMES
-    public List<Game> loadGames(String filename) {
-        try {
-            return mapper.readValue(
-                    new File(filename),
-                    new TypeReference<List<Game>>() {}
-            );
-
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Fehler beim Laden der Spiele: " + filename, e
-            );
-        }
+        return mapper.readValue(
+                new File(filename),
+                new TypeReference<List<Media>>() {}
+        );
     }
 }
