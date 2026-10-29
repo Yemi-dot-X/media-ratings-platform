@@ -1,9 +1,8 @@
 package at.fhtw.mrp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDate;
 
 //annotation
 @Getter
@@ -15,8 +14,12 @@ import lombok.Setter;
 public class User {
     private int id;
     private String username;
+    private String name;
     private String email;
     private String password;
+    private LocalDate dateOfBirth;
+    //Konstruktor fuer die Registierung
+
 
 
 }

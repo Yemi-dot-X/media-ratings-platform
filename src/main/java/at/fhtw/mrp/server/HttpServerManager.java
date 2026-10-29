@@ -49,7 +49,7 @@ public class HttpServerManager {
         );
 
         server.createContext(
-                "/api/user",
+                "/api/users",
                 new UserHandler(userService)
         );
 

@@ -1,6 +1,7 @@
 
 package at.fhtw.mrp.service;
 
+import at.fhtw.mrp.exception.InvalidCredentialsException;
 import at.fhtw.mrp.exception.UserAlreadyExistsException;
 import at.fhtw.mrp.model.Genre;
 import at.fhtw.mrp.model.Rating;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +61,17 @@ public class UserService {
                     "Password must not be empty"
             );
         }
+        if (user.getDateOfBirth() == null) {
+            throw new IllegalArgumentException(
+                    "Date of birth is required"
+            );
+        }
+
+        if (user.getDateOfBirth().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "Date of birth cannot be in the future"
+            );
+        }
 
         // Username bereits vorhanden?
         if (usernameExists(user.getUsername())) {
@@ -67,8 +80,6 @@ public class UserService {
             );
         }
 
-
-
         // E-Mail bereits vorhanden?
         if (emailExists(user.getEmail())) {
             throw new UserAlreadyExistsException(
@@ -76,13 +87,12 @@ public class UserService {
             );
         }
 
-        // ID uebergeben
-        user.setId(nextUserId);
-        nextUserId++;
+
 
         // Passwort hashen
         //eine zufalliger Salt wird verwendet
         //sodass das unterschiedliche Hashes entstehen bei den selben Passwort
+
         String hashedPassword = BCrypt.hashpw(
                 user.getPassword(),
                 BCrypt.gensalt()
@@ -98,9 +108,31 @@ public class UserService {
         userMap.put(user.getId(), user);
     }
 
+    public User login(String username, String password){
+        if(username == null || username.isBlank()){
+            throw new IllegalArgumentException("Username is required");
+        }
+
+        if(password == null || password.isBlank()){
+            throw new IllegalArgumentException("Password is required");
+        }
+
+        User user = findByUsername(username);
+
+        if(user ==  null){
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+
+        // Passwort prüfen
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+            return user;
+    }
+
     // FIND BY ID
-    public User findById(int id) {
-        return userMap.get(id);
+    public User findById(int userId) {
+        return userMap.get(userId);
     }
 
     // FIND BY USERNAME
@@ -109,7 +141,7 @@ public class UserService {
         if (username == null) {
             return null;
         }
-
+        //holt alle User verarbeitet die nacheinander
         return userMap.values().stream()
                 .filter(user ->
                         user.getUsername()
