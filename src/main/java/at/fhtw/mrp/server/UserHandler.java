@@ -2,9 +2,11 @@ package at.fhtw.mrp.server;
 
 import at.fhtw.mrp.dto.LoginRequest;
 import at.fhtw.mrp.dto.RegisterRequest;
+import at.fhtw.mrp.dto.UpdateProfileRequest;
 import at.fhtw.mrp.dto.UserProfileResponse;
 import at.fhtw.mrp.exception.InvalidCredentialsException;
 import at.fhtw.mrp.exception.UserAlreadyExistsException;
+import at.fhtw.mrp.exception.UserNotFoundException;
 import at.fhtw.mrp.model.Media;
 import at.fhtw.mrp.model.User;
 import at.fhtw.mrp.service.UserService;
@@ -44,6 +46,10 @@ public class UserHandler implements HttpHandler {
 
             case "GET":
                 handleGet(exchange);
+                break;
+
+            case "PUT":
+                handlePut(exchange);
                 break;
 
             default:
@@ -222,4 +228,58 @@ public class UserHandler implements HttpHandler {
         }
     }
 
+    private void handlePut(HttpExchange exchange) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        try {
+            // User-ID aus URL lesen
+            String path = exchange.getRequestURI().getPath();
+            String[] parts = path.split("/");
+
+            if (parts.length != 5 ||
+                    !parts[1].equals("api") ||
+                    !parts[2].equals("users") ||
+                    !parts[4].equals("profile")) {
+                sendText(exchange, 404, "Invalid profile path");
+                return;
+            }
+
+            int userId = Integer.parseInt(parts[3]);
+
+            // JSON in Java-Objekt umwandeln
+            UpdateProfileRequest request = mapper.readValue(
+                    exchange.getRequestBody(),
+                    UpdateProfileRequest.class
+            );
+
+            // Service aufrufen
+            User updatedUser = userService.updateProfile(userId, request);
+
+            //Antwort als JSON erstellen
+            String response = mapper.writeValueAsString(updatedUser);
+            byte[] responseBytes =
+                    response.getBytes(StandardCharsets.UTF_8);
+
+            exchange.getResponseHeaders().set(
+                    "Content-Type", "application/json; charset=UTF-8"
+            );
+
+            exchange.sendResponseHeaders(200, responseBytes.length);
+
+            try (OutputStream outputStream = exchange.getResponseBody()) {
+                outputStream.write(responseBytes);
+            }
+
+        } catch (UserNotFoundException e) {
+            sendText(exchange, 404, e.getMessage());
+
+        } catch (IllegalArgumentException e) {
+            sendText(exchange, 400, e.getMessage());
+
+        } catch (JsonProcessingException e) {
+            sendText(exchange, 400, "Invalid JSON");
+        }
+    }
 }
