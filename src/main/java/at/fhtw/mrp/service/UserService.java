@@ -31,6 +31,8 @@ public class UserService {
 
     private final Map<Integer, User> userMap = new HashMap<>();
 
+
+
     // REGISTER
     public void register(User user) {
         // User prüfen

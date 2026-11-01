@@ -1,6 +1,7 @@
 package at.fhtw.mrp.service;
 
 import at.fhtw.mrp.model.User;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -32,6 +33,7 @@ public class JwtService {
     public String generateToken(User user){
 
         return Jwts.builder()
+                //speichert die UserID
                 .subject(String.valueOf(user.getId()))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600000
@@ -41,7 +43,29 @@ public class JwtService {
     }
 
     public boolean validateToken(String token){
+        try{
+            //bereitet das Lesen vor
+            //prüft die Signatur
+            //prüft den Token nach Ablaufdatum
+            Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e){
+            return false;
 
-        return false;
+        }
+    }
+
+    public int getUserIdFromToken(String token){
+        String subject = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+
+        return Integer.parseInt(subject);
     }
 }
