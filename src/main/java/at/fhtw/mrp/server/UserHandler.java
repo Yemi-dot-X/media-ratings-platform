@@ -1,14 +1,12 @@
 package at.fhtw.mrp.server;
 
-import at.fhtw.mrp.dto.LoginRequest;
-import at.fhtw.mrp.dto.RegisterRequest;
-import at.fhtw.mrp.dto.UpdateProfileRequest;
-import at.fhtw.mrp.dto.UserProfileResponse;
+import at.fhtw.mrp.dto.*;
 import at.fhtw.mrp.exception.InvalidCredentialsException;
 import at.fhtw.mrp.exception.UserAlreadyExistsException;
 import at.fhtw.mrp.exception.UserNotFoundException;
 import at.fhtw.mrp.model.Media;
 import at.fhtw.mrp.model.User;
+import at.fhtw.mrp.service.JwtService;
 import at.fhtw.mrp.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +15,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import static at.fhtw.mrp.util.HttpResponseUtil.sendText;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,13 +25,13 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
+@RequiredArgsConstructor
 public class UserHandler implements HttpHandler {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public UserHandler(UserService userService) {
-        this.userService = userService;
-    }
+
 
     @Override
     public void handle(HttpExchange exchange)
@@ -210,8 +210,27 @@ public class UserHandler implements HttpHandler {
                     request.getPassword()
             );
 
-            // Erfolgreicher Login
-            sendText(exchange, 200, "Login successful");
+            String token = jwtService.generateToken(user);
+            System.out.println("JWT generated: " + (token != null));
+            LoginResponse response = new LoginResponse(token);
+            String json = mapper.writeValueAsString(response);
+            byte[] responseBytes =
+                    json.getBytes(StandardCharsets.UTF_8);
+
+            exchange.getResponseHeaders().set(
+                    "Content-Type",
+                    "application/json; charset=UTF-8"
+            );
+
+            exchange.sendResponseHeaders(200, responseBytes.length);
+
+
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBytes);
+            }
+
+
+
 
         } catch (InvalidCredentialsException e) {
             sendText(exchange, 401, "Invalid credentials");
@@ -235,6 +254,22 @@ public class UserHandler implements HttpHandler {
 
         try {
             // User-ID aus URL lesen
+
+            String authHeader = exchange.getRequestHeaders()
+                    .getFirst("Authorization");
+
+            if (authHeader == null ||
+                    !authHeader.startsWith("Bearer ")) {
+
+                sendText(exchange, 401, "Missing or invalid token");
+                return;
+            }
+            //Token aus den Header holen
+            String token = authHeader.substring(7);
+
+        if(!jwtService.validateToken(token)){
+            sendText(exchange, 401, "Invalid token");
+        }
             String path = exchange.getRequestURI().getPath();
             String[] parts = path.split("/");
 
@@ -247,7 +282,12 @@ public class UserHandler implements HttpHandler {
             }
 
             int userId = Integer.parseInt(parts[3]);
-
+            // Berechtigung prüfen
+            int tokenUserId = jwtService.getUserIdFromToken(token);
+            if (userId != tokenUserId) {
+                sendText(exchange, 403, "Access denied");
+                return;
+            }
             // JSON in Java-Objekt umwandeln
             UpdateProfileRequest request = mapper.readValue(
                     exchange.getRequestBody(),
@@ -280,6 +320,8 @@ public class UserHandler implements HttpHandler {
 
         } catch (JsonProcessingException e) {
             sendText(exchange, 400, "Invalid JSON");
+        } catch (JwtException e) {
+            sendText(exchange, 401, "Invalid token");
         }
     }
 }

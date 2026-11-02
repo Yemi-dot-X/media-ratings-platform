@@ -1,9 +1,11 @@
 package at.fhtw.mrp.server;
 
 import at.fhtw.mrp.model.Media;
+import at.fhtw.mrp.service.JwtService;
 import at.fhtw.mrp.service.MediaService;
 import at.fhtw.mrp.service.RatingService;
 import at.fhtw.mrp.service.UserService;
+import at.fhtw.mrp.service.JwtService;
 import com.sun.net.httpserver.HttpServer;
 import lombok.RequiredArgsConstructor;
 
@@ -29,9 +31,19 @@ public class HttpServerManager {
         MediaService mediaService =
                 new MediaService(ratingService);
 
+        JwtService jwtService =
+                new JwtService();
+
+
+
         UserService userService = new UserService(
                 ratingService,
                 mediaService
+        );
+
+        UserHandler userHandler = new UserHandler(
+                userService,
+                jwtService
         );
 
 
@@ -50,7 +62,7 @@ public class HttpServerManager {
 
         server.createContext(
                 "/api/users",
-                new UserHandler(userService)
+                userHandler
         );
 
         //Server startet
