@@ -8,6 +8,7 @@ import at.fhtw.mrp.exception.UserNotFoundException;
 import at.fhtw.mrp.model.Genre;
 import at.fhtw.mrp.model.Rating;
 import at.fhtw.mrp.model.User;
+import at.fhtw.mrp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -24,13 +25,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
-    private int nextUserId = 1;
 
     private final RatingService ratingService;
     private final MediaService mediaService;
 
-    private final Map<Integer, User> userMap = new HashMap<>();
-
+    private final UserRepository userRepository;
 
 
     // REGISTER
@@ -105,12 +104,11 @@ public class UserService {
         user.setPassword(hashedPassword);
 
 // ID vergeben
-        user.setId(nextUserId);
-        nextUserId++;
+        user.setId(0);
+        userRepository.save(user);
 
 // Benutzer speichern
-        userMap.put(user.getId(), user);
-    }
+        userRepository.save(user);    }
 
     public User login(String username, String password){
         if(username == null || username.isBlank()){
@@ -136,7 +134,7 @@ public class UserService {
 
     // FIND BY ID
     public User findById(int userId) {
-        return userMap.get(userId);
+        return userRepository.findById(userId);
     }
 
     // FIND BY USERNAME
@@ -145,45 +143,23 @@ public class UserService {
         if (username == null) {
             return null;
         }
-        //holt alle User verarbeitet die nacheinander
-        return userMap.values().stream()
-                .filter(user ->
-                        user.getUsername()
-                                .equalsIgnoreCase(username))
-                .findFirst()
-                .orElse(null);
+       return userRepository.findByUsername(username);
     }
 
     public boolean emailExists(String email) {
 
-        for (User existingUser : userMap.values()) {
+        return userRepository.existsByEmail(email);
 
-            if (existingUser.getEmail() != null &&
-                    existingUser.getEmail().equalsIgnoreCase(email)) {
-                return true;
-            }
-
-        }
-
-        return false;
     }
 
     // CHECK USERNAME
     public boolean usernameExists(String username) {
-
-        for (User existingUser : userMap.values()) {
-
-                if(existingUser.getUsername().equals(username)){
-                    return  true;
-                }
-        }
-        //alle nutzer gesucht und niemand gefunden
-        return false;
+        return userRepository.existsByUsername(username);
     }
 
     public User updateProfile(int userId, UpdateProfileRequest request){
         //User suchen
-        User user = userMap.get(userId);
+        User user = userRepository.findById(userId);
 
         if(user == null){
             throw new UserNotFoundException("User not found");
@@ -210,6 +186,11 @@ public class UserService {
 
             throw new IllegalArgumentException("Invalid email");
         }
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setDateOfBirth(request.getBirthDate());
+        userRepository.save(user);
 
         return user;
     }
@@ -253,7 +234,8 @@ public class UserService {
     // LEADERBOARD
     public List<User> getLeaderboard() {
 
-        return userMap.values().stream()
+        return userRepository.findAll().
+                stream()
                 .sorted(
                         Comparator.comparingInt(
                                 (User user) ->

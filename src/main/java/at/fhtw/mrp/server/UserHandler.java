@@ -6,6 +6,8 @@ import at.fhtw.mrp.exception.UserAlreadyExistsException;
 import at.fhtw.mrp.exception.UserNotFoundException;
 import at.fhtw.mrp.model.Media;
 import at.fhtw.mrp.model.User;
+import at.fhtw.mrp.repository.InMemoryUserRepository;
+import at.fhtw.mrp.repository.UserRepository;
 import at.fhtw.mrp.service.JwtService;
 import at.fhtw.mrp.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -126,6 +128,12 @@ public class UserHandler implements HttpHandler {
     private void handleGet(HttpExchange exchange)
             throws IOException {
 
+        Integer tokenUserId = authenticate(exchange);
+
+        if(tokenUserId == null){
+            return;
+        }
+
         String path = exchange.getRequestURI().getPath();
         String[] parts = path.split("/");
 
@@ -141,9 +149,6 @@ public class UserHandler implements HttpHandler {
             int userId;
         try {
             userId = Integer.parseInt(parts[3]);
-
-
-
         } catch (NumberFormatException e) {
             sendText(exchange, 400, "Invalid user ID");
             return;
@@ -153,6 +158,11 @@ public class UserHandler implements HttpHandler {
             sendText(exchange, 400, "Invalid user ID");
             return;
         }
+            if(userId != tokenUserId){
+                sendText(exchange, 403, "Access denied");
+                return;
+            }
+
             User user = userService.findById(userId);
             if(user == null ){
                 sendText(exchange, 404, "User not found");
@@ -211,7 +221,6 @@ public class UserHandler implements HttpHandler {
             );
 
             String token = jwtService.generateToken(user);
-            System.out.println("JWT generated: " + (token != null));
             LoginResponse response = new LoginResponse(token);
             String json = mapper.writeValueAsString(response);
             byte[] responseBytes =
@@ -253,23 +262,13 @@ public class UserHandler implements HttpHandler {
         mapper.registerModule(new JavaTimeModule());
 
         try {
-            // User-ID aus URL lesen
+            // JWT prüfen und User-ID aus Token holen
+            Integer tokenUserId = authenticate(exchange);
 
-            String authHeader = exchange.getRequestHeaders()
-                    .getFirst("Authorization");
-
-            if (authHeader == null ||
-                    !authHeader.startsWith("Bearer ")) {
-
-                sendText(exchange, 401, "Missing or invalid token");
+            if (tokenUserId == null) {
                 return;
             }
-            //Token aus den Header holen
-            String token = authHeader.substring(7);
 
-        if(!jwtService.validateToken(token)){
-            sendText(exchange, 401, "Invalid token");
-        }
             String path = exchange.getRequestURI().getPath();
             String[] parts = path.split("/");
 
@@ -283,7 +282,6 @@ public class UserHandler implements HttpHandler {
 
             int userId = Integer.parseInt(parts[3]);
             // Berechtigung prüfen
-            int tokenUserId = jwtService.getUserIdFromToken(token);
             if (userId != tokenUserId) {
                 sendText(exchange, 403, "Access denied");
                 return;
@@ -298,7 +296,19 @@ public class UserHandler implements HttpHandler {
             User updatedUser = userService.updateProfile(userId, request);
 
             //Antwort als JSON erstellen
-            String response = mapper.writeValueAsString(updatedUser);
+// DTO erstellen
+            UserProfileResponse responseDto = new UserProfileResponse();
+
+// Daten übernehmen
+            responseDto.setId(updatedUser.getId());
+            responseDto.setUsername(updatedUser.getUsername());
+            responseDto.setName(updatedUser.getName());
+            responseDto.setEmail(updatedUser.getEmail());
+            responseDto.setDateOfBirth(updatedUser.getDateOfBirth());
+
+// DTO in JSON umwandeln
+            String response = mapper.writeValueAsString(responseDto);
+
             byte[] responseBytes =
                     response.getBytes(StandardCharsets.UTF_8);
 
@@ -320,8 +330,36 @@ public class UserHandler implements HttpHandler {
 
         } catch (JsonProcessingException e) {
             sendText(exchange, 400, "Invalid JSON");
-        } catch (JwtException e) {
+        }
+    }
+
+    private Integer authenticate(HttpExchange exchange) throws IOException {
+
+        // 1. Authorization-Header lesen
+        String authHeader = exchange.getRequestHeaders()
+                .getFirst("Authorization");
+
+        // 2. Header prüfen
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            sendText(exchange, 401, "Missing or invalid token");
+            return null;
+        }
+
+        // 3. JWT aus Header holen
+        String token = authHeader.substring(7);
+
+        // 4. JWT validieren
+        if (!jwtService.validateToken(token)) {
             sendText(exchange, 401, "Invalid token");
+            return null;
+        }
+
+        // 5. User-ID aus JWT zurückgeben
+        try {
+            return jwtService.getUserIdFromToken(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            sendText(exchange, 401, "Invalid token");
+            return null;
         }
     }
 }

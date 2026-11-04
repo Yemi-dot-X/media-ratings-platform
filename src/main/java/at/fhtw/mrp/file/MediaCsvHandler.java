@@ -1,7 +1,5 @@
 package at.fhtw.mrp.file;
 
-import at.fhtw.mrp.model.Movie;
-
 import java.io.*;
 import java.util.*;
 

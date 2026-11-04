@@ -4,7 +4,6 @@ package at.fhtw.mrp.service;
 import at.fhtw.mrp.dto.UpdateMediaRequest;
 import at.fhtw.mrp.model.Genre;
 import at.fhtw.mrp.model.Media;
-import at.fhtw.mrp.model.Movie;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;

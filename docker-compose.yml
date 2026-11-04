@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: mrp-postgres
+    environment:
+      POSTGRES_DB: mrp_db
+      POSTGRES_USER: mrp_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - mrp_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  mrp_postgres_data:

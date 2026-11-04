@@ -1,13 +1,14 @@
 package at.fhtw.mrp.server;
 
 import at.fhtw.mrp.model.Media;
+import at.fhtw.mrp.repository.InMemoryUserRepository;
+import at.fhtw.mrp.repository.JdbcUserRepository;
+import at.fhtw.mrp.repository.UserRepository;
 import at.fhtw.mrp.service.JwtService;
 import at.fhtw.mrp.service.MediaService;
 import at.fhtw.mrp.service.RatingService;
 import at.fhtw.mrp.service.UserService;
-import at.fhtw.mrp.service.JwtService;
 import com.sun.net.httpserver.HttpServer;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.io.OutputStream;
 
 
-@RequiredArgsConstructor
+
 
 //SERVER startet den Server und verarbeitet die Http Anfrage
 public class HttpServerManager {
@@ -34,11 +35,14 @@ public class HttpServerManager {
         JwtService jwtService =
                 new JwtService();
 
+        UserRepository userRepository = new JdbcUserRepository();
+
 
 
         UserService userService = new UserService(
                 ratingService,
-                mediaService
+                mediaService,
+                userRepository
         );
 
         UserHandler userHandler = new UserHandler(

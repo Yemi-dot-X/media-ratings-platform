@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HttpResponseUtil {
     public static void sendText(
@@ -35,4 +36,21 @@ public class HttpResponseUtil {
         }
     }
 
+    public static void sendJson(
+            HttpExchange exchange,
+            int statusCode,
+            Object body) throws IOException {
+
+        byte[] response = Json.MAPPER.writeValueAsBytes(body);
+
+        exchange.getResponseHeaders().set(
+                "Content-Type", "application/json; charset=UTF-8"
+        );
+
+        exchange.sendResponseHeaders(statusCode, response.length);
+
+        try (OutputStream output = exchange.getResponseBody()) {
+            output.write(response);
+        }
+    }
 }

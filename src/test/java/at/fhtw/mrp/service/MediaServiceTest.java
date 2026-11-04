@@ -2,7 +2,6 @@
 package at.fhtw.mrp.service;
 
 import at.fhtw.mrp.model.Genre;
-import at.fhtw.mrp.model.Movie;
 import at.fhtw.mrp.model.Media;
 
 import org.junit.jupiter.api.Test;
