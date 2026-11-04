@@ -21,9 +21,10 @@ public abstract class Media {
     private int creatorId;
     private String title;
     private String description;
-    private int releaseYear;
-    private int ageRestriction;
+    private Integer releaseYear;
+    private Integer ageRestriction;
     private List<Genre> genres;
+    private MediaType type;
 
     //nur fuer Filme
     private Integer duration;

@@ -1,7 +1,6 @@
 
 package at.fhtw.mrp.service;
 
-import at.fhtw.mrp.dto.UpdateProfileRequest;
 import at.fhtw.mrp.exception.InvalidCredentialsException;
 import at.fhtw.mrp.exception.UserAlreadyExistsException;
 import at.fhtw.mrp.exception.UserNotFoundException;
@@ -157,7 +156,7 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public User updateProfile(int userId, UpdateProfileRequest request){
+    public User updateProfile(int userId, User changes){
         //User suchen
         User user = userRepository.findById(userId);
 
@@ -165,31 +164,31 @@ public class UserService {
             throw new UserNotFoundException("User not found");
         }
 
-        if(request == null){
+        if(changes == null){
             throw new IllegalArgumentException("Request is null");
         }
 
-        if(request.getName() == null || request.getName().isBlank()){
+        if(changes.getName() == null || changes.getName().isBlank()){
             throw new IllegalArgumentException(" Name is empty");
         }
 
 
-        if(request.getBirthDate() == null || request.getBirthDate().isAfter(LocalDate.now())){
+        if(changes.getDateOfBirth() == null || changes.getDateOfBirth().isAfter(LocalDate.now())){
             throw new IllegalArgumentException("Invalid birth date");
 
         }
 
         // E-Mail validieren
-        if (request.getEmail() == null ||
-                request.getEmail().isBlank() ||
-                !request.getEmail().contains("@")) {
+        if (changes.getEmail() == null ||
+                changes.getEmail().isBlank() ||
+                !changes.getEmail().contains("@")) {
 
             throw new IllegalArgumentException("Invalid email");
         }
 
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setDateOfBirth(request.getBirthDate());
+        user.setName(changes.getName());
+        user.setEmail(changes.getEmail());
+        user.setDateOfBirth(changes.getDateOfBirth());
         userRepository.save(user);
 
         return user;
