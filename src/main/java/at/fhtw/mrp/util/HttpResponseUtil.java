@@ -53,4 +53,8 @@ public class HttpResponseUtil {
             output.write(response);
         }
     }
+    //Antwort ohne Body, zum Beispiel 204 nach DELETE. */
+    public static void sendEmpty(HttpExchange exchange, int statusCode) throws IOException {
+        exchange.sendResponseHeaders(statusCode, -1);
+    }
 }

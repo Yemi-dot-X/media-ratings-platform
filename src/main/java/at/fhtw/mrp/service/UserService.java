@@ -32,7 +32,7 @@ public class UserService {
 
 
     // REGISTER
-    public void register(User user) {
+    public User register(User user) {
         // User prüfen
         if (user == null) {
             throw new IllegalArgumentException(
@@ -90,7 +90,6 @@ public class UserService {
         }
 
 
-
         // Passwort hashen
         //eine zufalliger Salt wird verwendet
         //sodass das unterschiedliche Hashes entstehen bei den selben Passwort
@@ -102,12 +101,15 @@ public class UserService {
 
         user.setPassword(hashedPassword);
 
-// ID vergeben
+        // ID vergeben
         user.setId(0);
-        userRepository.save(user);
+        //Passwort hashen. BCrypt nimmt pro Passwort einen zufälligen Salt,
+        // darum entstehen für dasselbe Passwort unterschiedliche Hashes.
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
-// Benutzer speichern
-        userRepository.save(user);    }
+        // Die Datenbank vergibt die ID. Das Ergebnis enthält sie.
+        return userRepository.create(user);
+    }
 
     public User login(String username, String password){
         if(username == null || username.isBlank()){
@@ -133,7 +135,7 @@ public class UserService {
 
     // FIND BY ID
     public User findById(int userId) {
-        return userRepository.findById(userId);
+        return userRepository.readById(userId);
     }
 
     // FIND BY USERNAME
@@ -158,7 +160,7 @@ public class UserService {
 
     public User updateProfile(int userId, User changes){
         //User suchen
-        User user = userRepository.findById(userId);
+        User user = userRepository.readById(userId);
 
         if(user == null){
             throw new UserNotFoundException("User not found");
@@ -189,7 +191,7 @@ public class UserService {
         user.setName(changes.getName());
         user.setEmail(changes.getEmail());
         user.setDateOfBirth(changes.getDateOfBirth());
-        userRepository.save(user);
+        userRepository.create(user);
 
         return user;
     }
@@ -233,7 +235,7 @@ public class UserService {
     // LEADERBOARD
     public List<User> getLeaderboard() {
 
-        return userRepository.findAll().
+        return userRepository.readAll().
                 stream()
                 .sorted(
                         Comparator.comparingInt(

@@ -1,5 +1,6 @@
 package at.fhtw.mrp.service;
 
+import at.fhtw.mrp.exception.UnauthorizedException;
 import at.fhtw.mrp.model.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -7,6 +8,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 
@@ -15,20 +19,23 @@ public class JwtService {
     private final SecretKey secretKey;
 
     public JwtService() {
-        String encodedKey = System.getenv("JWT_SECRET");
+        String password = System.getenv("JWT_SECRET");
 
-        if (encodedKey == null || encodedKey.isBlank()) {
+        if (password == null || password.isBlank()) {
             // Fallback nur für lokale Tests und die Abgabe
-            encodedKey = "mysecretpassword";
+            password = "mysecretpassword";
         }
+        try{
+        byte[] keyBytes = MessageDigest
+                .getInstance("SHA-256")
+                .digest(password.getBytes(StandardCharsets.UTF_8));
 
-        byte[] keyBytes = Decoders.BASE64.decode(encodedKey);
 
-        if (keyBytes.length < 32) {
-            throw new IllegalStateException("JWT key is too short");
-        }
 
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    } catch (NoSuchAlgorithmException e) {
+        throw new IllegalStateException("SHA-256 unavailable", e);
+    }
     }
     public String generateToken(User user){
 
@@ -40,6 +47,27 @@ public class JwtService {
                 ))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    //Liest die User-ID aus dem Authorization Header ("Bearer ...").
+    //  Wirft UnauthorizedException (401), wenn der Header fehlt oder das Token ungültig ist.
+
+    public int requireUserId(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new UnauthorizedException("Missing or invalid token");
+        }
+
+        String token = authorizationHeader.substring(7);
+
+        if (!validateToken(token)) {
+            throw new UnauthorizedException("Invalid token");
+        }
+
+        try {
+            return getUserIdFromToken(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new UnauthorizedException("Invalid token");
+        }
     }
 
     public boolean validateToken(String token){

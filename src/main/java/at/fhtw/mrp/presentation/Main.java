@@ -1,14 +1,18 @@
 package at.fhtw.mrp.presentation;
+import at.fhtw.mrp.server.Server;
 
-import at.fhtw.mrp.server.HttpServerManager;
+
 import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        Server server = new Server(8080);
 
-        HttpServerManager server = new HttpServerManager();
-
-        server.start();
+        try {
+            server.start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

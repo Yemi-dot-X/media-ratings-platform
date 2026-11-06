@@ -2,16 +2,18 @@ package at.fhtw.mrp.repository;
 
 import at.fhtw.mrp.model.User;
 
-import java.util.List;
-
-public interface UserRepository {
-
-    User findById(int id);
+public interface UserRepository extends Repository<User, Integer> {
+    // Returns null when the username does not exist.
     User findByUsername(String username);
-    void save(User user);
-    boolean existsByEmail(String email);
 
     boolean existsByUsername(String username);
 
-    List<User> findAll();
+    boolean existsByEmail(String email);
+
+
+     //updateById ändert nur name, email und dateOfBirth.
+     //Username und Passwort bleiben unverändert.
+
+    @Override
+    User updateById(Integer id, User entity);
 }

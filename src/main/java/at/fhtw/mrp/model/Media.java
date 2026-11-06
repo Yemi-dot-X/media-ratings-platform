@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public abstract class Media {
+public class Media {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
@@ -28,4 +28,8 @@ public abstract class Media {
 
     //nur fuer Filme
     private Integer duration;
+
+    public MediaType getMediaType() {
+        return type;
+    }
 }
