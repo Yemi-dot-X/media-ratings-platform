@@ -99,13 +99,13 @@ public class UserService {
                 BCrypt.gensalt()
         );
 
+
         user.setPassword(hashedPassword);
 
         // ID vergeben
         user.setId(0);
         //Passwort hashen. BCrypt nimmt pro Passwort einen zufälligen Salt,
         // darum entstehen für dasselbe Passwort unterschiedliche Hashes.
-        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
         // Die Datenbank vergibt die ID. Das Ergebnis enthält sie.
         return userRepository.create(user);
@@ -121,6 +121,16 @@ public class UserService {
         }
 
         User user = findByUsername(username);
+
+        System.out.println("User gefunden: " + (user != null));
+
+        if (user != null) {
+            System.out.println(
+                    "BCrypt gültig: " +
+                            BCrypt.checkpw(password, user.getPassword())
+            );
+        }
+
 
         if(user ==  null){
             throw new InvalidCredentialsException("Invalid credentials");

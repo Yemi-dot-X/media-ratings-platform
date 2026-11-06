@@ -23,8 +23,5 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private LocalDate dateOfBirth;
-    //Konstruktor fuer die Registierung
-
-
 
 }
