@@ -61,6 +61,7 @@ public class MediaService {
 
     // FIND BY ID
     public Media findById(int id) {
+
         return mediaRepository.readById(id);
     }
 

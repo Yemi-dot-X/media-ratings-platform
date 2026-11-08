@@ -24,7 +24,7 @@ class JdbcUserRepositoryTest {
                 LocalDate.of(2000, 1, 1)
         );
 
-        repository.save(user);
+        User saveedUser = repository.create(user);
 
         assertTrue(user.getId() > 0);
     }

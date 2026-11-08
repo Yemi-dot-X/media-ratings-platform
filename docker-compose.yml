@@ -1,15 +1,16 @@
 services:
   postgres:
-    image: postgres:17
-    container_name: mrp-postgres
+    image: postgres:16
+    container_name: swen-db
     environment:
-      POSTGRES_DB: mrp_db
-      POSTGRES_USER: mrp_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - mrp_postgres_data:/var/lib/postgresql/data
+      - swen-db-data:/var/lib/postgresql/data
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
 
 volumes:
-  mrp_postgres_data:
+  swen-db-data:

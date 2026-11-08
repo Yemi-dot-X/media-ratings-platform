@@ -36,8 +36,24 @@ public class MediaRouteHandler implements RouteHandler {
                 return;
             }
 
-            if (path.matches(BASE + "/[1-9][0-9]*")) {
-                int id = Integer.parseInt(path.substring(BASE.length() + 1));
+            if (path.startsWith(BASE + "/")) {
+
+                String idText = path.substring(BASE.length() + 1);
+
+                int id;
+
+                try {
+                    id = Integer.parseInt(idText);
+
+                    if (id <= 0) {
+                        ErrorResponses.send(exchange, 400, "Invalid media ID");
+                        return;
+                    }
+
+                } catch (NumberFormatException e) {
+                    ErrorResponses.send(exchange, 400, "Invalid media ID");
+                    return;
+                }
                 switch (method == null ? HttpMethod.POST : method) {
                     case GET -> controller.get(exchange, id);
                     case PUT -> controller.put(exchange, id);

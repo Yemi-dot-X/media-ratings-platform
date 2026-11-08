@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Media {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -24,12 +26,9 @@ public class Media {
     private Integer releaseYear;
     private Integer ageRestriction;
     private List<Genre> genres;
-    private MediaType type;
+    private MediaType mediaType;
 
     //nur fuer Filme
     private Integer duration;
 
-    public MediaType getMediaType() {
-        return type;
-    }
 }
