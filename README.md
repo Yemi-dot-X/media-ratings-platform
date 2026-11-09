@@ -2,7 +2,7 @@
 
 Java REST API mit Java HttpServer, PostgreSQL, JDBC und JWT. Zwischenabgabe.
 
-Architektur, Endpunkte, Statuscodes, Tests und Projektumfang: siehe [DOCUMENTATION.md](DOCUMENTATION.md).
+Architektur, Endpunkte, Statuscodes, Tests und Projektumfang.
 
 ## Voraussetzungen
 
