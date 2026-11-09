@@ -122,14 +122,6 @@ public class UserService {
 
         User user = findByUsername(username);
 
-        System.out.println("User gefunden: " + (user != null));
-
-        if (user != null) {
-            System.out.println(
-                    "BCrypt gültig: " +
-                            BCrypt.checkpw(password, user.getPassword())
-            );
-        }
 
 
         if(user ==  null){
